@@ -1,30 +1,49 @@
 const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
-const BASE_URL = 'https://www.googleapis.com/youtube/v3';
+const BASE_URL = "https://www.googleapis.com/youtube/v3";
 
 export const fetchIndianChannels = async () => {
   try {
+
     const response = await fetch(
-      `${BASE_URL}/videos?part=snippet&chart=mostPopular&regionCode=IN&maxResults=50&key=${API_KEY}`
+      `${BASE_URL}/search?part=snippet&type=channel&q=india&maxResults=50&key=${API_KEY}`
     );
+
     const data = await response.json();
-    const ids = data.items.map(item => item.snippet.channelId);
-    return [...new Set(ids)]; // Unique IDs only
+
+    if (!data.items) return [];
+
+    const ids = data.items.map(item => item.id.channelId);
+
+    return [...new Set(ids)];
+
   } catch (error) {
-    console.error("Error fetching trending channels:", error);
+    console.error("Error fetching Indian channels:", error);
     return [];
   }
 };
 
 export const fetchChannelDetails = async (id) => {
-  const response = await fetch(
-    `${BASE_URL}/channels?part=snippet,statistics&id=${id}&key=${API_KEY}`
-  );
-  const data = await response.json();
-  const channel = data.items[0];
-  return {
-    id: channel.id,
-    name: channel.snippet.title,
-    thumbnail: channel.snippet.thumbnails.high.url,
-    subs: parseInt(channel.statistics.subscriberCount),
-  };
+  try {
+
+    const response = await fetch(
+      `${BASE_URL}/channels?part=snippet,statistics&id=${id}&key=${API_KEY}`
+    );
+
+    const data = await response.json();
+
+    if (!data.items || data.items.length === 0) return null;
+
+    const channel = data.items[0];
+
+    return {
+      id: channel.id,
+      name: channel.snippet.title,
+      thumbnail: channel.snippet.thumbnails.high.url,
+      subs: parseInt(channel.statistics.subscriberCount || 0),
+    };
+
+  } catch (error) {
+    console.error("Error fetching channel details:", error);
+    return null;
+  }
 };
