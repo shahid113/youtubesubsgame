@@ -157,7 +157,7 @@ export default function App() {
 
       {/* GAME */}
 
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-6">
+      <main className="flex-1 flex flex-col items-center px-4 py-6">
 
         <h2 className="text-lg md:text-3xl font-black mb-6 text-center">
           Who has more subscribers?
@@ -224,132 +224,87 @@ export default function App() {
           ref={shareRef}
           style={{
             width: "1080px",
-            height: "1920px",
+            height: "1080px",
             position: "relative",
-            background: "linear-gradient(135deg, #020617 60%, #f0abfc 100%)",
+            background:
+              "linear-gradient(135deg,#020617,#0f172a,#020617)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            fontFamily: "'Inter', system-ui, sans-serif",
+            color: "white",
+            fontFamily: "Inter, sans-serif",
             overflow: "hidden"
           }}
         >
-          {/* Modern Mesh Gradient Background */}
-          <div style={{
-            position: "absolute",
-            inset: 0,
-            background: "radial-gradient(circle at 20% 10%, #4f46e5 0%, transparent 60%), radial-gradient(circle at 80% 90%, #ec4899 0%, transparent 60%), radial-gradient(circle at 80% 10%, #06b6d4 0%, transparent 60%)",
-            opacity: 0.5
-          }} />
 
-          {/* Floating Avatar Grid - Modernized */}
-          <div style={{
-            position: "absolute",
-            inset: 0,
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "40px",
-            padding: "120px",
-            opacity: 0.18,
-            filter: "grayscale(100%) blur(3px)"
-          }}>
-            {[...Array(16)].map((_, i) => {
-              const img = [channels.left?.image, channels.right?.image, ...pool.current.map(c => c.image)][i % 8];
-              return <img key={i} src={img} style={{ width: "160px", height: "160px", borderRadius: "48px", objectFit: "cover", border: "4px solid #fff2" }} />;
-            })}
+          {/* background logos */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              opacity: 0.15,
+              display: "grid",
+              gridTemplateColumns: "repeat(4,1fr)",
+              gap: "40px",
+              padding: "60px"
+            }}
+          >
+            {[channels.left?.image, channels.right?.image]
+              .concat(pool.current.slice(0, 6).map(c => c.image))
+              .map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  style={{
+                    width: "140px",
+                    height: "140px",
+                    borderRadius: "50%",
+                    objectFit: "cover"
+                  }}
+                />
+              ))}
           </div>
 
-          {/* Main Content Card - Glassmorphism & Shadow */}
-          <div style={{
-            position: "relative",
-            width: "900px",
-            padding: "90px 60px",
-            background: "rgba(255, 255, 255, 0.08)",
-            backdropFilter: "blur(32px)",
-            borderRadius: "96px",
-            border: "2px solid rgba(255, 255, 255, 0.12)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            boxShadow: "0 40px 80px -20px rgba(0, 0, 0, 0.6)"
-          }}>
-            {/* Badge */}
-            <div style={{
-              background: "linear-gradient(90deg,#34d399 0%,#f472b6 100%)",
-              color: "#fff",
-              padding: "18px 48px",
-              borderRadius: "100px",
-              fontSize: "38px",
-              fontWeight: "800",
-              letterSpacing: "2px",
-              marginBottom: "48px",
-              border: "2px solid rgba(255,255,255,0.2)",
-              boxShadow: "0 4px 24px #f472b6a0"
-            }}>
-              NEW HIGH SCORE
-            </div>
+          {/* game title */}
+          <div style={{ fontSize: "70px", fontWeight: "900" }}>
+            🔥 DESI CLASH
+          </div>
 
-            <div style={{ fontSize: "56px", fontWeight: "500", opacity: 0.8, marginBottom: "16px", color: "#fff" }}>
-              I just scored
-            </div>
+          {/* text */}
+          <div style={{ marginTop: "40px", fontSize: "36px", opacity: .8 }}>
+            My Score
+          </div>
 
-            {/* Big Score with Gradient Text */}
-            <div style={{
-              fontSize: "300px",
+          {/* big score */}
+          <div
+            style={{
+              fontSize: "180px",
               fontWeight: "900",
-              lineHeight: "0.9",
-              background: "linear-gradient(180deg, #fff 0%, #f0abfc 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              filter: "drop-shadow(0 12px 32px rgba(0,0,0,0.35))"
-            }}>
-              {highScore}
-            </div>
-
-            <div style={{ fontSize: "54px", fontWeight: "700", marginTop: "48px", color: "#fff" }}>
-              on <span style={{ color: "#ec4899", fontWeight: "900" }}>DESI CLASH</span>
-            </div>
+              margin: "20px 0",
+              color: "#22c55e"
+            }}
+          >
+            {highScore}
           </div>
 
-          {/* CTA Section - Modern Button */}
-          <div style={{ marginTop: "96px", textAlign: "center", zIndex: 10 }}>
-            <div style={{
-              padding: "36px 100px",
-              background: "linear-gradient(90deg,#f472b6 0%,#34d399 100%)",
-              color: "white",
-              borderRadius: "120px",
-              fontSize: "48px",
-              fontWeight: "900",
-              boxShadow: "0 12px 36px rgba(244,114,182,0.2), 0 2px 8px #34d39980"
-            }}>
-              PLAY & BEAT ME
-            </div>
-
-            <div style={{
-              marginTop: "48px",
-              fontSize: "32px",
-              fontWeight: "600",
-              opacity: 0.6,
-              letterSpacing: "2px",
-              color: "#fff"
-            }}>
-              {window.location.hostname}
-            </div>
+          {/* challenge text */}
+          <div style={{ fontSize: "40px", marginTop: "20px" }}>
+            Can you beat me?
           </div>
 
-          {/* Decorative Elements - Modern Glow */}
-          <div style={{
-            position: "absolute",
-            bottom: "-120px",
-            right: "-120px",
-            width: "480px",
-            height: "480px",
-            background: "#f472b6",
-            filter: "blur(140px)",
-            borderRadius: "50%",
-            opacity: 0.35
-          }} />
+          {/* URL */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: "40px",
+              fontSize: "26px",
+              opacity: .7
+            }}
+          >
+            {window.location.href}
+          </div>
+
         </div>
       </div>
 
