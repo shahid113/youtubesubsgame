@@ -47,7 +47,7 @@ export default function App() {
     const blob = await generateShareImage();
     const file = new File([blob], "desi-clash-score.png", { type: "image/png" });
 
-    const text = `🔥 I scored ${highScore} in DESI CLASH!\nCan you beat me?`;
+    const text = `🔥 I scored ${highScore} in DESI CLASH!\nCan you beat me? ${window.location.href}`;
 
     // Mobile share
     if (navigator.share) {
@@ -224,101 +224,132 @@ export default function App() {
           ref={shareRef}
           style={{
             width: "1080px",
-            height: "1080px",
+            height: "1920px",
             position: "relative",
-            background:
-              "linear-gradient(135deg,#020617,#0f172a,#020617)",
+            background: "linear-gradient(135deg, #020617 60%, #f0abfc 100%)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            color: "white",
-            fontFamily: "Inter, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             overflow: "hidden"
           }}
         >
+          {/* Modern Mesh Gradient Background */}
+          <div style={{
+            position: "absolute",
+            inset: 0,
+            background: "radial-gradient(circle at 20% 10%, #4f46e5 0%, transparent 60%), radial-gradient(circle at 80% 90%, #ec4899 0%, transparent 60%), radial-gradient(circle at 80% 10%, #06b6d4 0%, transparent 60%)",
+            opacity: 0.5
+          }} />
 
-          {/* background logos */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              opacity: 0.15,
-              display: "grid",
-              gridTemplateColumns: "repeat(4,1fr)",
-              gap: "40px",
-              padding: "60px"
-            }}
-          >
-            {[channels.left?.image, channels.right?.image]
-              .concat(pool.current.slice(0, 6).map(c => c.image))
-              .map((img, i) => (
-                <img
-                  key={i}
-                  src={img}
-                  style={{
-                    width: "140px",
-                    height: "140px",
-                    borderRadius: "50%",
-                    objectFit: "cover"
-                  }}
-                />
-              ))}
+          {/* Floating Avatar Grid - Modernized */}
+          <div style={{
+            position: "absolute",
+            inset: 0,
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: "40px",
+            padding: "120px",
+            opacity: 0.18,
+            filter: "grayscale(100%) blur(3px)"
+          }}>
+            {[...Array(16)].map((_, i) => {
+              const img = [channels.left?.image, channels.right?.image, ...pool.current.map(c => c.image)][i % 8];
+              return <img key={i} src={img} style={{ width: "160px", height: "160px", borderRadius: "48px", objectFit: "cover", border: "4px solid #fff2" }} />;
+            })}
           </div>
 
-          {/* game title */}
-          <div style={{ fontSize: "70px", fontWeight: "900" }}>
-            🔥 DESI CLASH
-          </div>
+          {/* Main Content Card - Glassmorphism & Shadow */}
+          <div style={{
+            position: "relative",
+            width: "900px",
+            padding: "90px 60px",
+            background: "rgba(255, 255, 255, 0.08)",
+            backdropFilter: "blur(32px)",
+            borderRadius: "96px",
+            border: "2px solid rgba(255, 255, 255, 0.12)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            boxShadow: "0 40px 80px -20px rgba(0, 0, 0, 0.6)"
+          }}>
+            {/* Badge */}
+            <div style={{
+              background: "linear-gradient(90deg,#34d399 0%,#f472b6 100%)",
+              color: "#fff",
+              padding: "18px 48px",
+              borderRadius: "100px",
+              fontSize: "38px",
+              fontWeight: "800",
+              letterSpacing: "2px",
+              marginBottom: "48px",
+              border: "2px solid rgba(255,255,255,0.2)",
+              boxShadow: "0 4px 24px #f472b6a0"
+            }}>
+              NEW HIGH SCORE
+            </div>
 
-          {/* text */}
-          <div style={{ marginTop: "40px", fontSize: "36px", opacity: .8 }}>
-            My score
-          </div>
+            <div style={{ fontSize: "56px", fontWeight: "500", opacity: 0.8, marginBottom: "16px", color: "#fff" }}>
+              I just scored
+            </div>
 
-          {/* big score */}
-          <div
-            style={{
-              fontSize: "180px",
+            {/* Big Score with Gradient Text */}
+            <div style={{
+              fontSize: "300px",
               fontWeight: "900",
-              margin: "20px 0",
-              color: "#22c55e"
-            }}
-          >
-            {highScore}
+              lineHeight: "0.9",
+              background: "linear-gradient(180deg, #fff 0%, #f0abfc 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              filter: "drop-shadow(0 12px 32px rgba(0,0,0,0.35))"
+            }}>
+              {highScore}
+            </div>
+
+            <div style={{ fontSize: "54px", fontWeight: "700", marginTop: "48px", color: "#fff" }}>
+              on <span style={{ color: "#ec4899", fontWeight: "900" }}>DESI CLASH</span>
+            </div>
           </div>
 
-          {/* challenge text */}
-          <div style={{ fontSize: "40px", marginTop: "20px" }}>
-            Can you beat me?
+          {/* CTA Section - Modern Button */}
+          <div style={{ marginTop: "96px", textAlign: "center", zIndex: 10 }}>
+            <div style={{
+              padding: "36px 100px",
+              background: "linear-gradient(90deg,#f472b6 0%,#34d399 100%)",
+              color: "white",
+              borderRadius: "120px",
+              fontSize: "48px",
+              fontWeight: "900",
+              boxShadow: "0 12px 36px rgba(244,114,182,0.2), 0 2px 8px #34d39980"
+            }}>
+              PLAY & BEAT ME
+            </div>
+
+            <div style={{
+              marginTop: "48px",
+              fontSize: "32px",
+              fontWeight: "600",
+              opacity: 0.6,
+              letterSpacing: "2px",
+              color: "#fff"
+            }}>
+              {window.location.hostname}
+            </div>
           </div>
 
-          {/* play button */}
-          <div
-            style={{
-              marginTop: "40px",
-              padding: "20px 60px",
-              background: "linear-gradient(90deg,#06b6d4,#ec4899)",
-              borderRadius: "40px",
-              fontSize: "36px",
-              fontWeight: "700"
-            }}
-          >
-            PLAY NOW
-          </div>
-
-          {/* URL */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: "40px",
-              fontSize: "26px",
-              opacity: .7
-            }}
-          >
-            {window.location.href}
-          </div>
-
+          {/* Decorative Elements - Modern Glow */}
+          <div style={{
+            position: "absolute",
+            bottom: "-120px",
+            right: "-120px",
+            width: "480px",
+            height: "480px",
+            background: "#f472b6",
+            filter: "blur(140px)",
+            borderRadius: "50%",
+            opacity: 0.35
+          }} />
         </div>
       </div>
 
