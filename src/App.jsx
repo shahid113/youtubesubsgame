@@ -219,31 +219,106 @@ export default function App() {
       </main>
 
       {/* SHARE IMAGE TEMPLATE */}
-
       <div className="absolute -left-[9999px]">
         <div
           ref={shareRef}
           style={{
-            width: "800px",
-            height: "800px",
+            width: "1080px",
+            height: "1080px",
+            position: "relative",
             background:
-              "linear-gradient(135deg, #7c3aed, #ec4899, #06b6d4)",
+              "linear-gradient(135deg,#020617,#0f172a,#020617)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
             color: "white",
-            fontWeight: "900",
-            textAlign: "center"
+            fontFamily: "Inter, sans-serif",
+            overflow: "hidden"
           }}
         >
-          <h1 className="text-6xl mb-10">DESI CLASH</h1>
 
-          <p className="text-2xl mb-4">My Best Score</p>
+          {/* background logos */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              opacity: 0.15,
+              display: "grid",
+              gridTemplateColumns: "repeat(4,1fr)",
+              gap: "40px",
+              padding: "60px"
+            }}
+          >
+            {[channels.left?.image, channels.right?.image]
+              .concat(pool.current.slice(0, 6).map(c => c.image))
+              .map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  style={{
+                    width: "140px",
+                    height: "140px",
+                    borderRadius: "50%",
+                    objectFit: "cover"
+                  }}
+                />
+              ))}
+          </div>
 
-          <div className="text-9xl">{highScore}</div>
+          {/* game title */}
+          <div style={{ fontSize: "70px", fontWeight: "900" }}>
+            🔥 DESI CLASH
+          </div>
 
-          <p className="mt-10 text-2xl">Can you beat me? 🔥</p>
+          {/* text */}
+          <div style={{ marginTop: "40px", fontSize: "36px", opacity: .8 }}>
+            My score
+          </div>
+
+          {/* big score */}
+          <div
+            style={{
+              fontSize: "180px",
+              fontWeight: "900",
+              margin: "20px 0",
+              color: "#22c55e"
+            }}
+          >
+            {highScore}
+          </div>
+
+          {/* challenge text */}
+          <div style={{ fontSize: "40px", marginTop: "20px" }}>
+            Can you beat me?
+          </div>
+
+          {/* play button */}
+          <div
+            style={{
+              marginTop: "40px",
+              padding: "20px 60px",
+              background: "linear-gradient(90deg,#06b6d4,#ec4899)",
+              borderRadius: "40px",
+              fontSize: "36px",
+              fontWeight: "700"
+            }}
+          >
+            PLAY NOW
+          </div>
+
+          {/* URL */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: "40px",
+              fontSize: "26px",
+              opacity: .7
+            }}
+          >
+            {window.location.href}
+          </div>
+
         </div>
       </div>
 
