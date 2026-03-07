@@ -3,17 +3,21 @@ const BASE_URL = "https://www.googleapis.com/youtube/v3";
 
 export const fetchIndianChannels = async () => {
   try {
-
+    // 1. Better query: Focus on 'Entertainment' keywords
+    // 2. regionCode: 'IN' targets India specifically
+    // 3. relevanceLanguage: 'hi' or 'en' helps filter local content
+    const query = "entertainment comedy gaming roast hindi"; 
+    
     const response = await fetch(
-      `${BASE_URL}/search?part=snippet&type=channel&q=india&maxResults=50&key=${API_KEY}`
+      `${BASE_URL}/search?part=snippet&type=channel&q=${encodeURIComponent(query)}&regionCode=IN&relevanceLanguage=hi&maxResults=50&key=${API_KEY}`
     );
 
     const data = await response.json();
 
     if (!data.items) return [];
 
+    // Extract unique IDs
     const ids = data.items.map(item => item.id.channelId);
-
     return [...new Set(ids)];
 
   } catch (error) {
