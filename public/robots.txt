@@ -1,0 +1,6 @@
+# Allow all crawlers (update host if you use a different domain)
+User-agent: *
+Allow: /
+
+# TODO: replace with your actual domain
+Sitemap: https://desiclash.fun/sitemap.xml

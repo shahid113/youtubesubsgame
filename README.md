@@ -1,3 +1,9 @@
+# Desi Clash — YouTube Subscriber Guess Game
+
+Desi Clash is a lightweight browser game where players guess YouTube channel subscriber counts. Keywords: Desi Clash, YouTube game, YouTube subscriber game, subscriber guess game, guess subscribers.
+
+---
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
