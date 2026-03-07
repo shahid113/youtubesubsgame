@@ -72,23 +72,40 @@ export default function App() {
   const loadRound = useCallback(async (winner = null) => {
     setStatus("loading");
 
-    if (pool.current.length < 5) {
-      pool.current = await fetchIndianChannels();
-    }
-
-    const getOne = () =>
-      pool.current.splice(Math.floor(Math.random() * pool.current.length), 1)[0];
-
     try {
+
+      if (pool.current.length < 5) {
+        pool.current = await fetchIndianChannels();
+
+        // if API returned empty list -> quota exceeded
+        if (!pool.current || pool.current.length === 0) {
+          setStatus("maintenance");
+          return;
+        }
+      }
+
+      const getOne = () =>
+        pool.current.splice(Math.floor(Math.random() * pool.current.length), 1)[0];
+
       const left = winner ? winner : await fetchChannelDetails(getOne());
       const right = await fetchChannelDetails(getOne());
 
       setChannels({ left, right });
       setStatus("playing");
       setResult(null);
-    } catch {
-      console.error("Error loading round");
+
+    } catch (error) {
+
+      // detect quota exceeded
+      if (error?.message?.includes("403") || error?.status === 403) {
+        setStatus("maintenance");
+      } else {
+        console.error(error);
+        setStatus("maintenance");
+      }
+
     }
+
   }, []);
 
   useEffect(() => {
@@ -123,12 +140,34 @@ export default function App() {
     }
   };
 
+  if (status === "maintenance") {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#020617] text-white text-center px-6">
+
+        <div className="text-5xl mb-6">🚧</div>
+
+        <h1 className="text-3xl md:text-4xl font-black mb-4 bg-gradient-to-r from-yellow-400 to-red-500 bg-clip-text text-transparent">
+          Site Under Maintenance
+        </h1>
+
+        <p className="text-white/70 max-w-lg mb-6">
+          The game will be available again soon.
+        </p>
+
+        <div className="text-sm text-white/40">
+          Please come back later 🙏
+        </div>
+
+      </div>
+    );
+  }
+
   if (status === "loading" && !channels.left) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#020617]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-14 h-14 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-cyan-400 font-bold">Loading Indian Creators...</p>
+          <p className="text-cyan-400 font-bold">Loading Creators...</p>
         </div>
       </div>
     );

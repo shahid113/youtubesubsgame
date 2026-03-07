@@ -21,7 +21,6 @@ export const fetchIndianChannels = async () => {
     return [...new Set(ids)];
 
   } catch (error) {
-    console.error("Error fetching Indian channels:", error);
     return [];
   }
 };
@@ -47,7 +46,6 @@ export const fetchChannelDetails = async (id) => {
     };
 
   } catch (error) {
-    console.error("Error fetching channel details:", error);
     return null;
   }
 };
