@@ -66,19 +66,7 @@ export default function AuthModal({ onClose }) {
 
         <div className="flex items-center w-full gap-3">
           <div className="flex-1 h-px bg-white/10" />
-          <span className="text-white/30 text-xs">or</span>
-          <div className="flex-1 h-px bg-white/10" />
         </div>
-
-        {/* Anonymous */}
-        <button
-          onClick={() => handle("anon")}
-          disabled={!!loading}
-          className="w-full flex items-center justify-center gap-3 px-5 py-3 bg-white/10 text-white rounded-xl font-bold hover:bg-white/20 active:scale-[0.98] transition disabled:opacity-60 border border-white/10"
-        >
-          {loading === "anon" ? <Spinner /> : "🕵️"}
-          Play as Guest
-        </button>
 
         {error && (
           <p className="text-red-400 text-xs text-center">{error}</p>
