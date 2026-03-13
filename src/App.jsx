@@ -31,6 +31,7 @@ export default function App() {
   const [channels, setChannels]   = useState({ left: null, right: null });
   const [score, setScore]         = useState(0);
   const [highScore, setHighScore] = useState(0);
+  const [localBestScore, setLocalBestScore] = useState(0); // Personal best (localStorage)
   const [status, setStatus]       = useState("loading"); // loading | playing | revealed | maintenance
   const [result, setResult]       = useState(null);      // win | lose
 
@@ -45,6 +46,13 @@ export default function App() {
   const pool     = useRef([]);
   const shareRef = useRef(null);
 
+  // ── Initialize local best score from localStorage ──────────────────────────
+  useEffect(() => {
+    const stored = parseInt(localStorage.getItem("indHighScore") || "0");
+    setLocalBestScore(stored);
+    setHighScore(stored);
+  }, []);
+
   // ── Auth listener ──────────────────────────────────────────────────────────
   useEffect(() => {
     const unsub = onAuthChange(async (u) => {
@@ -53,16 +61,17 @@ export default function App() {
         await createOrUpdateUser(u);
         const p = await getUserProfile(u.uid);
         setProfile(p);
-        // Prefer Firebase high-score over localStorage
-        const best = Math.max(p?.highScore || 0, parseInt(localStorage.getItem("indHighScore") || "0"));
+        // When logged in: show max of Firebase best + local best
+        const best = Math.max(p?.highScore || 0, localBestScore);
         setHighScore(best);
       } else {
+        // When logged out: always revert to localBestScore (do NOT change it)
         setProfile(null);
-        setHighScore(parseInt(localStorage.getItem("indHighScore") || "0"));
+        setHighScore(localBestScore);
       }
     });
     return unsub;
-  }, []);
+  }, [localBestScore]);
 
   // ── Round loader ───────────────────────────────────────────────────────────
   const loadRound = useCallback(async (winner = null) => {
@@ -109,6 +118,7 @@ export default function App() {
       // Local high-score update
       if (newScore > highScore) {
         setHighScore(newScore);
+        setLocalBestScore(newScore);
         localStorage.setItem("indHighScore", newScore);
       }
     } else {
@@ -128,6 +138,11 @@ export default function App() {
       const { isNewBest, highScore: savedBest } = await saveScore(user, finalScore);
       if (isNewBest) {
         setHighScore(savedBest);
+        // Also update local best if the new firebase best is higher
+        if (savedBest > localBestScore) {
+          setLocalBestScore(savedBest);
+          localStorage.setItem("indHighScore", savedBest);
+        }
         setNewBestAlert(true);
         setTimeout(() => setNewBestAlert(false), 3000);
         // Refresh profile
