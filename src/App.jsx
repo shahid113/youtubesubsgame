@@ -309,18 +309,6 @@ export default function App() {
             </button>
           </div>
         )}
-
-              {/* ── LEADERBOARD SECTION (below gameplay on all devices) ────────────── */}
-      <section className="w-full mt-6 px-3 sm:px-4 md:px-6 py-6 md:py-10 bg-gradient-to-b from-slate-900/30 to-slate-900/10 border-t border-white/5">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm sm:text-base md:text-lg font-black text-yellow-400 flex items-center gap-2">
-              🏆 Top Players
-            </h3>
-          </div>
-          <LeaderboardPreview currentUser={user} />
-        </div>
-      </section>
       </main>
 
       {/* ── MODALS ─────────────────────────────────────────────────────────── */}
