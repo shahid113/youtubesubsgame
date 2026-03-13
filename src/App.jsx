@@ -31,7 +31,6 @@ export default function App() {
   const [channels, setChannels]   = useState({ left: null, right: null });
   const [score, setScore]         = useState(0);
   const [highScore, setHighScore] = useState(0);
-  const [localBestScore, setLocalBestScore] = useState(0); // Personal best (localStorage)
   const [status, setStatus]       = useState("loading"); // loading | playing | revealed | maintenance
   const [result, setResult]       = useState(null);      // win | lose
 
@@ -46,13 +45,6 @@ export default function App() {
   const pool     = useRef([]);
   const shareRef = useRef(null);
 
-  // ── Initialize local best score from localStorage ──────────────────────────
-  useEffect(() => {
-    const stored = parseInt(localStorage.getItem("indHighScore") || "0");
-    setLocalBestScore(stored);
-    setHighScore(stored);
-  }, []);
-
   // ── Auth listener ──────────────────────────────────────────────────────────
   useEffect(() => {
     const unsub = onAuthChange(async (u) => {
@@ -61,17 +53,16 @@ export default function App() {
         await createOrUpdateUser(u);
         const p = await getUserProfile(u.uid);
         setProfile(p);
-        // When logged in: show max of Firebase best + local best
-        const best = Math.max(p?.highScore || 0, localBestScore);
-        setHighScore(best);
+        // Show Firebase best score for logged-in user
+        setHighScore(p?.highScore || 0);
       } else {
-        // When logged out: always revert to localBestScore (do NOT change it)
+        // When logged out: show 0 (no best score without account)
         setProfile(null);
-        setHighScore(localBestScore);
+        setHighScore(0);
       }
     });
     return unsub;
-  }, [localBestScore]);
+  }, []);
 
   // ── Round loader ───────────────────────────────────────────────────────────
   const loadRound = useCallback(async (winner = null) => {
@@ -115,11 +106,9 @@ export default function App() {
       setScore(newScore);
       setResult("win");
 
-      // Local high-score update
+      // Update high-score if new score beats current best
       if (newScore > highScore) {
         setHighScore(newScore);
-        setLocalBestScore(newScore);
-        localStorage.setItem("indHighScore", newScore);
       }
     } else {
       playSound("wrong");
@@ -138,11 +127,6 @@ export default function App() {
       const { isNewBest, highScore: savedBest } = await saveScore(user, finalScore);
       if (isNewBest) {
         setHighScore(savedBest);
-        // Also update local best if the new firebase best is higher
-        if (savedBest > localBestScore) {
-          setLocalBestScore(savedBest);
-          localStorage.setItem("indHighScore", savedBest);
-        }
         setNewBestAlert(true);
         setTimeout(() => setNewBestAlert(false), 3000);
         // Refresh profile
@@ -167,7 +151,10 @@ export default function App() {
   const shareScore = async () => {
     const blob = await generateShareImage();
     const file = new File([blob], "desi-clash-score.png", { type: "image/png" });
-    const text = `🔥 I scored ${highScore} in DESI CLASH!\nCan you beat me? ${window.location.href}`;
+    
+    // Share saved best score if logged in, otherwise current game score
+    const scoreToShare = user && !user.isAnonymous ? highScore : score;
+    const text = `🔥 I scored ${scoreToShare} in DESI CLASH!\nCan you beat me? ${window.location.href}`;
 
     if (navigator.share) {
       try { await navigator.share({ text, files: [file], title: "DESI CLASH" }); return; }
@@ -352,7 +339,9 @@ export default function App() {
           </div>
           <div style={{ fontSize: "70px", fontWeight: "900" }}>🔥 DESI CLASH</div>
           <div style={{ marginTop: "40px", fontSize: "36px", opacity: 0.8 }}>My Score</div>
-          <div style={{ fontSize: "180px", fontWeight: "900", margin: "20px 0", color: "#22c55e" }}>{highScore}</div>
+          <div style={{ fontSize: "180px", fontWeight: "900", margin: "20px 0", color: "#22c55e" }}>
+            {user && !user.isAnonymous ? highScore : score}
+          </div>
           <div style={{ fontSize: "40px", marginTop: "20px" }}>Can you beat me?</div>
           <div style={{ position: "absolute", bottom: "40px", fontSize: "26px", opacity: 0.7 }}>{window.location.href}</div>
         </div>
