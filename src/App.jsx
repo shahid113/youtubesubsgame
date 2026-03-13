@@ -4,7 +4,6 @@ import { fetchIndianChannels, fetchChannelDetails } from "./services/youtube";
 import ChannelCard from "./components/ChannelCard";
 import AuthModal from "./components/AuthModal";
 import LeaderboardModal from "./components/LeaderboardModal";
-import LeaderboardPreview from "./components/LeaderboardPreview";
 import UserMenu from "./components/UserMenu";
 import html2canvas from "html2canvas";
 
