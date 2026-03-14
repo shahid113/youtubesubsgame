@@ -258,36 +258,65 @@ export default function App() {
         </div>
       )}
 
-      {/* ── GAME ───────────────────────────────────────────────────────────── */}
-      <main className="flex-1 flex flex-col items-center px-3 sm:px-4 py-6 sm:py-10 md:px-6">
-        <h2 className="text-base sm:text-lg md:text-3xl font-black mb-4 sm:mb-6 text-center">
+      {/* ── GAME ───────────────────────────────────────────────────────── */}
+      <main className="flex-1 flex flex-col items-center px-4 py-10 md:px-8">
+
+        {/* Title */}
+        <h2 className="text-lg sm:text-xl md:text-4xl font-black text-center mb-8 md:mb-12">
           Who has more subscribers?
         </h2>
 
-        {/* Responsive Layout */}
-        <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-center">
-          <ChannelCard
-            side="left"
-            channel={channels.left}
-            isRevealed={status === "revealed"}
-            onClick={() => handleChoice("left")}
-            disabled={status !== "playing"}
-          />
+        {/* GAME AREA */}
+        <div className="relative w-full max-w-6xl">
 
-          <ChannelCard
-            side="right"
-            channel={channels.right}
-            isRevealed={status === "revealed"}
-            onClick={() => handleChoice("right")}
-            disabled={status !== "playing"}
-          />
+          {/* CARDS */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-3 items-center">
+
+            <ChannelCard
+              side="left"
+              channel={channels.left}
+              isRevealed={status === "revealed"}
+              onClick={() => handleChoice("left")}
+              disabled={status !== "playing"}
+            />
+
+            <ChannelCard
+              side="right"
+              channel={channels.right}
+              isRevealed={status === "revealed"}
+              onClick={() => handleChoice("right")}
+              disabled={status !== "playing"}
+            />
+
+          </div>
+
+          {/* VS BADGE (OVERLAP) */}
+          <div className="pointer-events-none absolute top-1/2 left-1/2 
+      -translate-x-1/2 -translate-y-1/2 z-20">
+
+            <div className="w-16 h-16 md:w-24 md:h-24
+        rounded-full
+        bg-gradient-to-r from-cyan-500 to-fuchsia-500
+        flex items-center justify-center
+        text-xl md:text-3xl font-black
+        shadow-[0_0_40px_rgba(236,72,153,0.6)]
+        border-4 border-slate-900
+        animate-pulse">
+
+              VS
+
+            </div>
+
+          </div>
+
         </div>
 
-        {/* ── RESULT ─────────────────────────────────────────────────────── */}
+        {/* RESULT */}
         {status === "revealed" && (
-          <div className="mt-6 sm:mt-10 flex flex-col items-center gap-3 sm:gap-6">
+          <div className="mt-10 md:mt-14 flex flex-col items-center gap-6">
+
             <div
-              className={`text-2xl sm:text-3xl md:text-5xl font-black ${result === "win" ? "text-green-400" : "text-red-500"
+              className={`text-3xl md:text-5xl font-black ${result === "win" ? "text-green-400" : "text-red-500"
                 }`}
             >
               {result === "win" ? "Correct 🔥" : "Game Over 💀"}
@@ -296,7 +325,10 @@ export default function App() {
             {result === "lose" && (
               <button
                 onClick={shareScore}
-                className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full font-bold hover:scale-105 transition shadow-md text-sm sm:text-base"
+                className="flex items-center gap-2 px-6 py-3
+          bg-gradient-to-r from-green-500 to-green-600
+          text-white rounded-full font-bold
+          hover:scale-105 transition shadow-lg"
               >
                 <WhatsAppIcon />
                 Share Score
@@ -309,10 +341,12 @@ export default function App() {
                   ? loadRound(channels.right)
                   : (setScore(0), loadRound())
               }
-              className="px-6 sm:px-10 py-2 sm:py-3 bg-white text-black rounded-full font-bold hover:scale-105 transition text-sm sm:text-base"
+              className="px-8 py-3 bg-white text-black
+        rounded-full font-bold hover:scale-105 transition"
             >
               {result === "win" ? "Next Round" : "Play Again"}
             </button>
+
           </div>
         )}
       </main>
