@@ -17,32 +17,32 @@ import {
 // ─── Sounds ──────────────────────────────────────────────────────────────────
 const SOUNDS = {
   correct: new Audio("https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"),
-  wrong:   new Audio("https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3"),
-  click:   new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"),
+  wrong: new Audio("https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3"),
+  click: new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"),
 };
 
 const playSound = (type) => {
-  try { SOUNDS[type].currentTime = 0; SOUNDS[type].play(); } catch {}
+  try { SOUNDS[type].currentTime = 0; SOUNDS[type].play(); } catch { }
 };
 
 // ─── App ─────────────────────────────────────────────────────────────────────
 export default function App() {
   // Game state
-  const [channels, setChannels]   = useState({ left: null, right: null });
-  const [score, setScore]         = useState(0);
+  const [channels, setChannels] = useState({ left: null, right: null });
+  const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
-  const [status, setStatus]       = useState("loading"); // loading | playing | revealed | maintenance
-  const [result, setResult]       = useState(null);      // win | lose
+  const [status, setStatus] = useState("loading"); // loading | playing | revealed | maintenance
+  const [result, setResult] = useState(null);      // win | lose
 
   // Auth / profile state
-  const [user, setUser]         = useState(undefined);  // undefined = still loading
-  const [profile, setProfile]   = useState(null);
+  const [user, setUser] = useState(undefined);  // undefined = still loading
+  const [profile, setProfile] = useState(null);
   const [showAuth, setShowAuth] = useState(false);
   const [showBoard, setShowBoard] = useState(false);
   const [savingScore, setSavingScore] = useState(false);
   const [newBestAlert, setNewBestAlert] = useState(false);
 
-  const pool     = useRef([]);
+  const pool = useRef([]);
   const shareRef = useRef(null);
 
   // ── Auth listener ──────────────────────────────────────────────────────────
@@ -76,7 +76,7 @@ export default function App() {
       const getOne = () =>
         pool.current.splice(Math.floor(Math.random() * pool.current.length), 1)[0];
 
-      const left  = winner ? winner : await fetchChannelDetails(getOne());
+      const left = winner ? winner : await fetchChannelDetails(getOne());
       const right = await fetchChannelDetails(getOne());
 
       setChannels({ left, right });
@@ -151,14 +151,14 @@ export default function App() {
   const shareScore = async () => {
     const blob = await generateShareImage();
     const file = new File([blob], "desi-clash-score.png", { type: "image/png" });
-    
+
     // Share saved best score if logged in, otherwise current game score
     const scoreToShare = user && !user.isAnonymous ? highScore : score;
     const text = `🔥 I scored ${scoreToShare} in DESI CLASH!\nCan you beat me? ${window.location.href}`;
 
     if (navigator.share) {
       try { await navigator.share({ text, files: [file], title: "DESI CLASH" }); return; }
-      catch {}
+      catch { }
     }
     const url = URL.createObjectURL(blob);
     Object.assign(document.createElement("a"), { href: url, download: "desi-clash-score.png" }).click();
@@ -264,7 +264,8 @@ export default function App() {
           Who has more subscribers?
         </h2>
 
-        <div className="w-full max-w-6xl grid grid-cols-2 gap-2 sm:gap-4 md:gap-8 items-center">
+        {/* Responsive Layout */}
+        <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-center">
           <ChannelCard
             side="left"
             channel={channels.left}
@@ -272,6 +273,7 @@ export default function App() {
             onClick={() => handleChoice("left")}
             disabled={status !== "playing"}
           />
+
           <ChannelCard
             side="right"
             channel={channels.right}
@@ -284,7 +286,10 @@ export default function App() {
         {/* ── RESULT ─────────────────────────────────────────────────────── */}
         {status === "revealed" && (
           <div className="mt-6 sm:mt-10 flex flex-col items-center gap-3 sm:gap-6">
-            <div className={`text-2xl sm:text-3xl md:text-5xl font-black ${result === "win" ? "text-green-400" : "text-red-500"}`}>
+            <div
+              className={`text-2xl sm:text-3xl md:text-5xl font-black ${result === "win" ? "text-green-400" : "text-red-500"
+                }`}
+            >
               {result === "win" ? "Correct 🔥" : "Game Over 💀"}
             </div>
 
